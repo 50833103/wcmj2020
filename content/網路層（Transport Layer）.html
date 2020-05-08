@@ -154,10 +154,12 @@ img.add_border {
           </div>
           
         </header>
-    <div id="tipue_search_content">W7 << <a href='W7.html'>Previous</a> <a href='W9.html'>Next</a> >> W9<br /><h1>W8</h1>
-<p>組別:第四組</p>
-<p>組長:50833102</p>
-<br />W7 << <a href='W7.html'>Previous</a> <a href='W9.html'>Next</a> >> W9</div>
+    <div id="tipue_search_content">傳輸層（Transport Layer） << <a href='傳輸層（Transport Layer）.html'>Previous</a> <a href='鏈結層（Link Level）.html'>Next</a> >> 鏈結層（Link Level）<br /><h1>網路層（Transport Layer）</h1>
+<p>前文中舉了許多郵寄的例子，此層就相當是郵件或包裹上方的地址欄位，無論你想要寄去世界上任何一角落，只要將地址寫好，郵件或包裹便會到達目的地。</p>
+<p>網路層能夠提供實體介面網路卡1個邏輯上的位置，也就是我們常聽到的IP位址，此IP位址是唯一的（或至少在同層級的網路中是如此），所以資訊才能夠傳輸到正確的目的地。此層會將資料的目的地和來源地寫入，如同我們在信件上填入收件人和寄件者。</p>
+<p>除了賦予每個網路介面卡邏輯IP位址外，IP還定義了資料封包該如何繞送的規則，如同郵局有各地區的小據點，也有大型的轉運站，藉由這些規則，選擇較佳的傳送路徑，將東西正確傳遞。</p>
+<p>網路層的IP協定，事實上並非完全可靠，有可能在途中因為某些原因（封包緩衝區溢位、TTL為0……），整個資料完全不見。IP協定基本上是以「盡可能去做」為宗旨，有多少運算資源做多少事，超過負荷的資料並不提供其它方式修補，丟掉就是掉了。所以才需要傳輸層做這類確保工作。</p>
+<br />傳輸層（Transport Layer） << <a href='傳輸層（Transport Layer）.html'>Previous</a> <a href='鏈結層（Link Level）.html'>Next</a> >> 鏈結層（Link Level）</div>
         
     <!-- footer -->
       <div class="container">
