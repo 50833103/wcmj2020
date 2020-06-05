@@ -96,6 +96,242 @@
 <p>Putty:THE FREE SSH FOR WINDOW</p>
 <p>設置:移動鼠標</p>
 <p>Private key</p>
+<h1>W12</h1>
+<p></p>
+<h1>W13</h1>
+<h2>Blogger API</h2>
+<p>基本概念:</p>
+<p>1. 這裡所指的 Blogger API 為:<span> </span><a href="https://developers.google.com/blogger/docs/3.0/using">https://developers.google.com/blogger/docs/3.0/using</a></p>
+<p>2. 將 CMSiMDE 中的 Pelican Blog 內容同步到 Google Blogger 的目的, 在讓網際內容管理系統中的網誌原始資料修改過程具備版次, 而且可同時將網誌出版在 Github Pages 與 Google Blogger 中, 讓網際內容的保存較具有永續性.</p>
+<p>3. Google Blogger 中的網誌系統各有獨立 ID, 這裡稱為 blog_id, 而網誌中的每一篇文章各有獨立 ID, 這裡稱為 post_id.</p>
+<p>4. Google Blogger 管理者登入後, 在 Settings - Permissions 項下, 允許 invite more authors, 而且在 Settings - Permissions - Blog admins and Authors 項下, 允許將所邀請共同寫作的 Author 提升為 Admin 管理者.</p>
+<p>5. Google 的每一個 API 都允許使用者建立以 Oauth2 為基礎的登入使用授權憑證, 配合所啟動的各種 API 程式庫, 一旦啟用並登入後, 可以透過程式方法, 呼叫程式庫功能, 對各種 Google 所提供的服務 (Blogger, Drive, Gmail, Calendar 等) 新增內容. 以 Blogger 而言, 只要使用者被設為某一網誌的共同作者, 即擁有在該網誌新增或編輯自己所發布的網誌文章權限.</p>
+<p>6. 使用者登入 Google 帳號後, 在<span> </span><a href="https://console.developers.google.com/">https://console.developers.google.com</a><span> </span>中所建立的 Oauth2 client ID, 可以下載存為 client_secrets.json 檔案.</p>
+<p>7. client_secrets.json 檔案則可以透過下列程式, 轉換為 credential_token.dat, 使用者針對特定啟用的 API 程式庫, 可以在讀取 credential_token.dat 的情況下, 取得與登入 Gmail 帳號相同的使用授權, 直接在擁有權限的 blog_id 中新增特定的文章 (並以特定的 post_id 辨識).</p>
+<div>
+<div class="syntaxhighlighter py" id="highlighter_479925">
+<table border="0" cellpadding="0" cellspacing="0">
+<tbody>
+<tr>
+<td class="gutter">
+<div class="line number1 index0 alt2">1</div>
+<div class="line number2 index1 alt1">2</div>
+<div class="line number3 index2 alt2">3</div>
+<div class="line number4 index3 alt1">4</div>
+<div class="line number5 index4 alt2">5</div>
+<div class="line number6 index5 alt1">6</div>
+<div class="line number7 index6 alt2">7</div>
+<div class="line number8 index7 alt1">8</div>
+<div class="line number9 index8 alt2">9</div>
+<div class="line number10 index9 alt1">10</div>
+<div class="line number11 index10 alt2">11</div>
+<div class="line number12 index11 alt1">12</div>
+<div class="line number13 index12 alt2">13</div>
+<div class="line number14 index13 alt1">14</div>
+<div class="line number15 index14 alt2">15</div>
+<div class="line number16 index15 alt1">16</div>
+<div class="line number17 index16 alt2">17</div>
+<div class="line number18 index17 alt1">18</div>
+<div class="line number19 index18 alt2">19</div>
+<div class="line number20 index19 alt1">20</div>
+<div class="line number21 index20 alt2">21</div>
+<div class="line number22 index21 alt1">22</div>
+<div class="line number23 index22 alt2">23</div>
+<div class="line number24 index23 alt1">24</div>
+</td>
+<td class="code">
+<div class="container">
+<div class="line number1 index0 alt2"><code class="py decorator">@language</code> <code class="py plain">python</code></div>
+<div class="line number2 index1 alt1"><code class="py comments"># https://developers.google.com/blogger/docs/3.0/using</code></div>
+<div class="line number3 index2 alt2"><code class="py comments"># under Mac command + b to execute</code></div>
+<div class="line number4 index3 alt1"><code class="py keyword">import</code> <code class="py plain">pickle</code></div>
+<div class="line number5 index4 alt2"><code class="py keyword">import</code> <code class="py plain">os</code></div>
+<div class="line number6 index5 alt1"><code class="py keyword">from</code> <code class="py plain">googleapiclient.discovery </code><code class="py keyword">import</code> <code class="py plain">build</code></div>
+<div class="line number7 index6 alt2"><code class="py keyword">from</code> <code class="py plain">google_auth_oauthlib.flow </code><code class="py keyword">import</code> <code class="py plain">InstalledAppFlow</code></div>
+<div class="line number8 index7 alt1"> </div>
+<div class="line number9 index8 alt2"> </div>
+<div class="line number10 index9 alt1"><code class="py plain">SCOPES </code><code class="py keyword">=</code> <code class="py plain">[</code><code class="py string">'https://www.googleapis.com/auth/blogger'</code><code class="py plain">, ]</code></div>
+<div class="line number11 index10 alt2"> </div>
+<div class="line number12 index11 alt1"><code class="py comments"># we check if the file tBo store the credentials exists</code></div>
+<div class="line number13 index12 alt2"><code class="py keyword">if</code> <code class="py keyword">not</code> <code class="py plain">os.path.exists(</code><code class="py string">'./../../yen_gm_blogger_token.dat'</code><code class="py plain">):</code></div>
+<div class="line number14 index13 alt1"> </div>
+<div class="line number15 index14 alt2"><code class="py spaces">    </code><code class="py plain">flow </code><code class="py keyword">=</code> <code class="py plain">InstalledAppFlow.from_client_secrets_file(</code><code class="py string">'./../../yen_gm_blogger_secrets.json'</code><code class="py plain">, SCOPES)</code></div>
+<div class="line number16 index15 alt1"><code class="py spaces">    </code><code class="py plain">credentials </code><code class="py keyword">=</code> <code class="py plain">flow.run_local_server()</code></div>
+<div class="line number17 index16 alt2"> </div>
+<div class="line number18 index17 alt1"><code class="py spaces">    </code><code class="py plain">with </code><code class="py functions">open</code><code class="py plain">(</code><code class="py string">'./../../yen_gm_blogger_token.dat'</code><code class="py plain">, </code><code class="py string">'wb'</code><code class="py plain">) as credentials_dat:</code></div>
+<div class="line number19 index18 alt2"><code class="py spaces">        </code><code class="py plain">pickle.dump(credentials, credentials_dat)</code></div>
+<div class="line number20 index19 alt1"><code class="py keyword">else</code><code class="py plain">:</code></div>
+<div class="line number21 index20 alt2"><code class="py spaces">    </code><code class="py plain">with </code><code class="py functions">open</code><code class="py plain">(</code><code class="py string">'./../../yen_gm_blogger_token.dat'</code><code class="py plain">, </code><code class="py string">'rb'</code><code class="py plain">) as credentials_dat:</code></div>
+<div class="line number22 index21 alt1"><code class="py spaces">        </code><code class="py plain">credentials </code><code class="py keyword">=</code> <code class="py plain">pickle.load(credentials_dat)</code></div>
+<div class="line number23 index22 alt2"><code class="py plain">service </code><code class="py keyword">=</code> <code class="py plain">build(</code><code class="py string">'blogger'</code><code class="py plain">, </code><code class="py string">'v3'</code><code class="py plain">, credentials</code><code class="py keyword">=</code><code class="py plain">credentials)</code></div>
+<div class="line number24 index23 alt1"><code class="py plain">g.es(service)</code></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<h1>W14</h1>
+<h2>MacBook 操作指南</h2>
+<h4>參考資料:</h4>
+<p><a href="https://drive.google.com/open?id=1zIJkMnFNb0QYsBbzlxAvw8t7hZdZc0hh">Mac OS X for Absolute Beginners.pdf</a><span> </span>(for @gm users only)</p>
+<p><a href="https://drive.google.com/open?id=1hl53RvI1sPFDuF63_TvjuuS-9y9ZQiO3">Learn C on the Mac.pdf</a><span> </span>(for @gm users only)</p>
+<p>這裡以 MacBook Air 2012 年出廠, 硬體規格:</p>
+<p>macOS Catalina Version 10.15.4</p>
+<p>1.8 GHz Dual-Core Intel Core i5</p>
+<p>Memory $GB 1600 MHz DDR3</p>
+<p>Graphics Intel HD Graphics 4000 1536 MB</p>
+<p>的操作為例, 如何存活在機械設計工程系與精密機械工程科的網際內容管理課程.</p>
+<p>由於網際內容管理課程主要以 Ｗindows 10 64 位元操作系統中的 Python 3 可攜程式環境使用為主.</p>
+<h4>從官方網站下載安裝 Python3</h4>
+<p>因此 Catalina 系統中的首要任務, 便是安裝 Python 3:</p>
+<p>在 2020.05.15 從<span> </span><a href="https://www.python.org/downloads/mac-osx/">https://www.python.org/downloads/mac-osx/</a><span> </span>可以下載安裝最新的 Python 3.8.3 解譯環境.</p>
+<h4>安裝 pip3</h4>
+<p>有了 python 3 環境之後, 就可以從 Lanuchpad -&gt; Other -&gt; Terminal 開啟終端機, 並從 get-pip.py 下載用來安裝 pip3 的程式碼, 以終端機上的指令進行安裝:</p>
+<div>
+<div class="syntaxhighlighter js" id="highlighter_686207">
+<table border="0" cellpadding="0" cellspacing="0">
+<tbody>
+<tr>
+<td class="gutter">
+<div class="line number1 index0 alt2">1</div>
+</td>
+<td class="code">
+<div class="container">
+<div class="line number1 index0 alt2"><code class="js plain">sudo python3 get-pip.py</code></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>安裝 pip3 之後, 可以安裝 CMSiMDE 所需的 flask, flask_cors, lxml, bs4, markdown, pelican 以及 leo:</p>
+<div>
+<div class="syntaxhighlighter js" id="highlighter_63131">
+<table border="0" cellpadding="0" cellspacing="0">
+<tbody>
+<tr>
+<td class="gutter">
+<div class="line number1 index0 alt2">1</div>
+</td>
+<td class="code">
+<div class="container">
+<div class="line number1 index0 alt2"><code class="js plain">sudo pip3 install flask flask_cors lxml bs4 markdown pelican leo</code></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<h4>安裝 XQuartz</h4>
+<p>之後, 就可以安裝<span> </span><a href="https://www.xquartz.org/">XQuartz</a>, 以便使用 xterm 替代 terminal.</p>
+<p>接下來假如要使用 SciTE 作為文字編輯器, 建議透過<span> </span><a href="https://www.macports.org/install.php">https://www.macports.org/install.php</a>  先根據 Catalina 操作系統版本安裝 Macports 之後, 再利用:</p>
+<div>
+<div class="syntaxhighlighter js" id="highlighter_545768">
+<table border="0" cellpadding="0" cellspacing="0">
+<tbody>
+<tr>
+<td class="gutter">
+<div class="line number1 index0 alt2">1</div>
+</td>
+<td class="code">
+<div class="container">
+<div class="line number1 index0 alt2"><code class="js plain">sudo port install scite</code></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>安裝 SciTE 文字編輯器.</p>
+<p>至此, 再加上 Catalina 原有的 git 指令, 使用者已經可以在 MacBook 上執行與 Windows 10 64 位元操作系統上相同的:</p>
+<div>
+<div class="syntaxhighlighter js" id="highlighter_212193">
+<table border="0" cellpadding="0" cellspacing="0">
+<tbody>
+<tr>
+<td class="gutter">
+<div class="line number1 index0 alt2">1</div>
+<div class="line number2 index1 alt1">2</div>
+<div class="line number3 index2 alt2">3</div>
+<div class="line number4 index3 alt1">4</div>
+<div class="line number5 index4 alt2">5</div>
+<div class="line number6 index5 alt1">6</div>
+<div class="line number7 index6 alt2">7</div>
+<div class="line number8 index7 alt1">8</div>
+<div class="line number9 index8 alt2">9</div>
+<div class="line number10 index9 alt1">10</div>
+<div class="line number11 index10 alt2">11</div>
+<div class="line number12 index11 alt1">12</div>
+<div class="line number13 index12 alt2">13</div>
+<div class="line number14 index13 alt1">14</div>
+<div class="line number15 index14 alt2">15</div>
+<div class="line number16 index15 alt1">16</div>
+<div class="line number17 index16 alt2">17</div>
+</td>
+<td class="code">
+<div class="container">
+<div class="line number1 index0 alt2"><code class="js plain">git clone --recurse-submodules</code></div>
+<div class="line number2 index1 alt1"> </div>
+<div class="line number3 index2 alt2"><code class="js plain">git add .</code></div>
+<div class="line number4 index3 alt1"> </div>
+<div class="line number5 index4 alt2"><code class="js plain">git commit -m </code><code class="js string">"commit message"</code></div>
+<div class="line number6 index5 alt1"> </div>
+<div class="line number7 index6 alt2"><code class="js plain">git push</code></div>
+<div class="line number8 index7 alt1"> </div>
+<div class="line number9 index8 alt2"><code class="js plain">git pull</code></div>
+<div class="line number10 index9 alt1"> </div>
+<div class="line number11 index10 alt2"><code class="js plain">git submodule add</code></div>
+<div class="line number12 index11 alt1"> </div>
+<div class="line number13 index12 alt2"><code class="js plain">git remote add</code></div>
+<div class="line number14 index13 alt1"> </div>
+<div class="line number15 index14 alt2"><code class="js plain">git branch</code></div>
+<div class="line number16 index15 alt1"> </div>
+<div class="line number17 index16 alt2"><code class="js plain">git merge</code></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>等指令, 只是在執行 python 程式時, 必須使用:</p>
+<div>
+<div class="syntaxhighlighter js" id="highlighter_411639">
+<table border="0" cellpadding="0" cellspacing="0">
+<tbody>
+<tr>
+<td class="gutter">
+<div class="line number1 index0 alt2">1</div>
+<div class="line number2 index1 alt1">2</div>
+<div class="line number3 index2 alt2">3</div>
+</td>
+<td class="code">
+<div class="container">
+<div class="line number1 index0 alt2"><code class="js plain">python3 wsgi.py</code></div>
+<div class="line number2 index1 alt1"> </div>
+<div class="line number3 index2 alt2"><code class="js plain">pip3 install certain_module</code></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>否則直接使用 python 執行, 將會用 Python 2.7 環境執行而產生錯誤.</p>
+<h4>其他建議安裝套件</h4>
+<p>Microsoft Remote Desktop</p>
+<p>Firefox</p>
+<p>OBS</p>
+<p>Visual Studio Code</p>
+<p><a href="https://drive.google.com/open?id=1VeO6HfA3eq8kn5q9m2iJ8SdGCVwUhizo">Visual Studio Code Distilled.pdf</a><span> </span>(for @gm users only)</p>
+<p>Flutter (Dart)</p>
+<h4>其他提示</h4>
+<p>Command + Shift + . (toggle hidden folders and files)</p>
 </div>
 </div>
 </div>
