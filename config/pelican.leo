@@ -77,6 +77,10 @@
 </v>
 <v t="leo.20200613142039.1"><vh>@clean 20200613.md</vh>
 <v t="leo.20200613142307.1"><vh>Blogger API</vh></v>
+<v t="leo.20200613145933.1"><vh>7956470056990278155</vh></v>
+</v>
+<v t="leo.20200613070232.1"><vh>@clean 20200613-2.md</vh>
+<v t="leo.20200613070318.1"><vh>Macbook</vh></v>
 </v>
 </v>
 </v>
@@ -448,81 +452,48 @@ ssh-keygen -t rsa -b 4096 -C "使用者學號"
 5. 之後確定 home 下的 .ssh 目錄中的 config 設定檔案為:
 ---
 
-1 # no proxy at home
-
-2 #ProxyCommand y:/PortableGit/mingw64/bin/connect.exe -H proxy.mde.nfu.edu.tw:3128 %h %p
-
-3 # set git_ssh=y:/putty/plink.exe with auth under putty github.com session setup
-
-4 ProxyCommand y:/putty/plink.exe github.com %h %p
-
-5  
-
-6  Host github.com
-
-7  User git
-
-8  Port 22
-
-9  Hostname github.com
-
-10     
-
-11 # for connect.exe need openssh key format
-
-12 #IdentityFile "y:\home\.ssh\id_rsa_mdecourse"
-
-13 # for plink.exe need rsa key format but set under putty github.com session
-
-14 # plink.exe do not need the following setting
-
-15 #IdentityFile "y:\home\.ssh\mdecourse_putty_private.ppk"
-
-16 
-
-17 TCPKeepAlive yesIdentitiesOnly yes
-
-18 IdentitiesOnly yes
+# no proxy at home
+#ProxyCommand y:/PortableGit/mingw64/bin/connect.exe -H proxy.mde.nfu.edu.tw:3128 %h %p
+# set git_ssh=y:/putty/plink.exe with auth under putty github.com session setup
+ProxyCommand y:/putty/plink.exe github.com %h %p
+  
+Host github.com
+    User git
+    Port 22
+    Hostname github.com
+     
+    # for connect.exe need openssh key format
+    #IdentityFile "y:\home\.ssh\id_rsa_mdecourse"
+    # for plink.exe need rsa key format but set under putty github.com session
+    # plink.exe do not need the following setting
+    #IdentityFile "y:\home\.ssh\mdecourse_putty_private.ppk"
+  
+    TCPKeepAlive yes
+    IdentitiesOnly yes
+    &lt;/pre&gt;
 
 6. 最後再將 wcmj2020 倉儲中 .git 目錄下的 config 檔案中的連線協定, 由 https 改為採 ssh 連線: 範例如下:
 ---
 
-1 [core]
-
-2   repositoryformatversion = 0
-
-3    filemode = false
-
-4   bare = false
-
-5 logallrefupdates = true
-
-6  symlinks = false
-
-7    ignorecase = true
-
-8 [submodule]
-
-9    active = .
-
-10 [remote "origin"]
-
-11    #url = https://github.com/mdecourse/wcmj2020.git
-
-12    url = git@github.com:mdecourse/wcmj2020.git
-
-13    fetch = +refs/heads/*:refs/remotes/origin/*
-
-14 [branch "master"]
-
-15    remote = origin
-
-16    merge = refs/heads/master
-
-17 [submodule "cmsimde"]
-
-18    url = https://github.com/mdecourse/cmsimde.git
-
+[core]
+    repositoryformatversion = 0
+    filemode = false
+    bare = false
+    logallrefupdates = true
+    symlinks = false
+    ignorecase = true
+[submodule]
+    active = .
+[remote "origin"]
+    #url = https://github.com/mdecourse/wcmj2020.git
+    url = git@github.com:mdecourse/wcmj2020.git
+    fetch = +refs/heads/*:refs/remotes/origin/*
+[branch "master"]
+    remote = origin
+    merge = refs/heads/master
+[submodule "cmsimde"]
+    url = https://github.com/mdecourse/cmsimde.git
+&lt;/pre&gt;
 之後就可以透過近端的 .ppk private key 與 Github.com 上的 public key 對應, 無需輸入帳號密碼就可以進行 git push.
 </t>
 <t tx="leo.20200529161428.1">Leo Editor 基本用法
@@ -594,6 +565,56 @@ ssh-keygen -t rsa -b 4096 -C "使用者學號"
 <t tx="leo.20200612064934.1"></t>
 <t tx="leo.20200612065223.1"></t>
 <t tx="leo.20200612135626.1"></t>
+<t tx="leo.20200613070232.1">@language md
+---
+Title: 2020wcmj-W14課程
+Date: 2020-06-13 15:00
+Category: Misc
+Tags: 2020wcmj-class
+Slug: 2020-wcmj-class5-Windows
+Author: 50833103
+---
+MacBook 操作指南
+&lt;!-- PELICAN_END_SUMMARY --&gt;
+
+@others</t>
+<t tx="leo.20200613070318.1">參考資料:
+Mac OS X for Absolute Beginners.pdf (for @gm users only)
+
+Learn C on the Mac.pdf (for @gm users only)
+
+這裡以 MacBook Air 2012 年出廠, 硬體規格:
+
+macOS Catalina Version 10.15.4
+
+1.8 GHz Dual-Core Intel Core i5
+
+Memory $GB 1600 MHz DDR3
+
+Graphics Intel HD Graphics 4000 1536 MB
+
+的操作為例, 如何存活在機械設計工程系與精密機械工程科的網際內容管理課程.
+
+由於網際內容管理課程主要以 Ｗindows 10 64 位元操作系統中的 Python 3 可攜程式環境使用為主.
+
+從官方網站下載安裝 Python3
+因此 Catalina 系統中的首要任務, 便是安裝 Python 3:
+
+在 2020.05.15 從 https://www.python.org/downloads/mac-osx/ 可以下載安裝最新的 Python 3.8.3 解譯環境
+安裝 pip3
+有了 python 3 環境之後, 就可以從 Lanuchpad -&gt; Other -&gt; Terminal 開啟終端機, 並從 get-pip.py 下載用來安裝 pip3 的程式碼, 以終端機上的指令進行安裝
+安裝 pip3 之後, 可以安裝 CMSiMDE 所需的 flask, flask_cors, lxml, bs4, markdown, pelican 以及 leo
+安裝 XQuartz
+之後, 就可以安裝 XQuartz, 以便使用 xterm 替代 terminal
+接下來假如要使用 SciTE 作為文字編輯器, 建議透過 https://www.macports.org/install.php
+安裝 SciTE 文字編輯器.
+至此, 再加上 Catalina 原有的 git 指令, 使用者已經可以在 MacBook 上執行與 Windows 10 64 位元操作系統上相同的令, 只是在執行 python 程式時, 必須使用:
+
+python3 wsgi.py
+ 
+pip3 install certain_module
+
+否則直接使用 python 執行, 將會用 Python 2.7 環境執行而產生錯誤</t>
 <t tx="leo.20200613142039.1">@language md
 ---
 Title: 2020wcmj-W13課程
@@ -624,8 +645,8 @@ Blogger API
 
 7. client_secrets.json 檔案則可以透過下列程式, 轉換為 credential_token.dat, 使用者針對特定啟用的 API 程式庫, 可以在讀取 credential_token.dat 的情況下, 取得與登入 Gmail 帳號相同的使用授權, 直接在擁有權限的 blog_id 中新增特定的文章 (並以特定的 post_id 辨識).
 @language python
-# https://developers.google.com/blogger/docs/3.0/using
-# under Mac command + b to execute
+#https://developers.google.com/blogger/docs/3.0/using
+#under Mac command + b to execute
 import pickle
 import os
 from googleapiclient.discovery import build
@@ -634,7 +655,7 @@ from google_auth_oauthlib.flow import InstalledAppFlow
  
 SCOPES = ['https://www.googleapis.com/auth/blogger', ]
  
-# we check if the file tBo store the credentials exists
+ #we check if the file tBo store the credentials exists
 if not os.path.exists('./../../yen_gm_blogger_token.dat'):
  
     flow = InstalledAppFlow.from_client_secrets_file('./../../yen_gm_blogger_secrets.json', SCOPES)
@@ -647,7 +668,8 @@ else:
         credentials = pickle.load(credentials_dat)
 service = build('blogger', 'v3', credentials=credentials)
 g.es(service)
-</t>
+&lt;/pre&gt;</t>
+<t tx="leo.20200613145933.1"></t>
 <t tx="yen.20170108171605.1"></t>
 <t tx="yen.20170108171605.2">QTreeWidget {
     /* These apply to the selected item, but not to editing items.*/
